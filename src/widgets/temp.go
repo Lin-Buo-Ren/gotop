@@ -8,36 +8,45 @@ import (
 	"time"
 
 	ui "github.com/gizak/termui"
+
+	"github.com/cjbassi/gotop/src/utils"
 )
 
-type Temp struct {
-	*ui.Block  // inherits from Block instead of a premade Widget
-	interval   time.Duration
-	Data       map[string]int
-	Threshold  int
-	TempLow    ui.Color
-	TempHigh   ui.Color
-	Fahrenheit bool
+type TemperatureMode uint32
+
+const (
+	Celcius      TemperatureMode = 0
+	Fahrenheight                 = 1
+)
+
+type TempWidget struct {
+	*ui.Block      // inherits from Block instead of a premade Widget
+	updateInterval time.Duration
+	Data           map[string]int
+	TempThreshold  int32
+	TempLowColor   ui.Color
+	TempHighColor  ui.Color
+	TempMode       TemperatureMode
 }
 
-func NewTemp(renderLock *sync.RWMutex, fahrenheit bool) *Temp {
-	self := &Temp{
-		Block:     ui.NewBlock(),
-		interval:  time.Second * 5,
-		Data:      make(map[string]int),
-		Threshold: 80, // temp at which color should change
+func NewTempWidget(renderLock *sync.RWMutex, tempMode TemperatureMode) *TempWidget {
+	self := &TemperatureWidget{
+		Block:          ui.NewBlock(),
+		updateInterval: time.Second * 5,
+		Data:           make(map[string]int),
+		TempThreshold:  80, // temp at which color should change
+		TempMode:       tempMode,
 	}
 	self.Title = " Temperatures "
 
-	if fahrenheit {
-		self.Fahrenheit = true
-		self.Threshold = int(self.Threshold*9/5 + 32)
+	if tempMode == Fahrenheight {
+		self.TempThreshold = utils.CelsiusToFahrenheit(self.TempThreshold)
 	}
 
 	self.update()
 
 	go func() {
-		for range time.NewTicker(self.interval).C {
+		for range time.NewTicker(self.updateInterval).C {
 			renderLock.RLock()
 			self.update()
 			renderLock.RUnlock()
@@ -48,7 +57,7 @@ func NewTemp(renderLock *sync.RWMutex, fahrenheit bool) *Temp {
 }
 
 // We implement a custom Draw method instead of inheriting from a generic Widget.
-func (self *Temp) Draw(buf *ui.Buffer) {
+func (self *TempWidget) Draw(buf *ui.Buffer) {
 	self.Block.Draw(buf)
 
 	var keys []string
@@ -62,9 +71,9 @@ func (self *Temp) Draw(buf *ui.Buffer) {
 			break
 		}
 
-		fg := self.TempLow
-		if self.Data[key] >= self.Threshold {
-			fg = self.TempHigh
+		fg := self.TempLowColor
+		if self.Data[key] >= self.TempThreshold {
+			fg = self.TempHighColor
 		}
 
 		s := ui.TrimString(key, (self.Inner.Dx() - 4))

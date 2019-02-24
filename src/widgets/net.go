@@ -12,16 +12,16 @@ import (
 	"github.com/cjbassi/gotop/src/utils"
 )
 
-type Net struct {
+type NetWidget struct {
 	*ui.Sparklines
-	interval time.Duration
+	updateInterval time.Duration
 
 	// used to calculate recent network activity
 	prevRecvTotal uint64
 	prevSentTotal uint64
 }
 
-func NewNet(renderLock *sync.RWMutex) *Net {
+func NewNetWidget(renderLock *sync.RWMutex) *NetWidget {
 	recv := ui.NewSparkline()
 	recv.Data = []int{}
 
@@ -29,16 +29,16 @@ func NewNet(renderLock *sync.RWMutex) *Net {
 	sent.Data = []int{}
 
 	spark := ui.NewSparklines(recv, sent)
-	self := &Net{
-		Sparklines: spark,
-		interval:   time.Second,
+	self := &NetWidget{
+		Sparklines:     spark,
+		updateInterval: time.Second,
 	}
 	self.Title = " Network Usage "
 
 	self.update()
 
 	go func() {
-		for range time.NewTicker(self.interval).C {
+		for range time.NewTicker(self.updateInterval).C {
 			renderLock.RLock()
 			self.update()
 			renderLock.RUnlock()
@@ -48,7 +48,7 @@ func NewNet(renderLock *sync.RWMutex) *Net {
 	return self
 }
 
-func (self *Net) update() {
+func (self *NetWidget) update() {
 	interfaces, err := psNet.IOCounters(true)
 	if err != nil {
 		log.Printf("failed to get network activity from gopsutil: %v", err)

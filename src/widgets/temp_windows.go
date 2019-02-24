@@ -8,7 +8,7 @@ import (
 	"github.com/cjbassi/gotop/src/utils"
 )
 
-func (self *Temp) update() {
+func (self *TempWidget) update() {
 	sensors, err := psHost.SensorsTemperatures()
 	if err != nil {
 		log.Printf("failed to get sensors from gopsutil: %v", err)

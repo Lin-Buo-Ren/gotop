@@ -11,7 +11,7 @@ var (
 	TB = uint64(math.Pow(2, 40))
 )
 
-func CelsiusToFahrenheit(c int) int {
+func CelsiusToFahrenheit(c int32) int32 {
 	return c*9/5 + 32
 }
 
@@ -46,7 +46,7 @@ func ConvertBytes(b uint64) (float64, string) {
 	}
 }
 
-func Max(a, b int) int {
+func MaxInt(a, b int) int {
 	if a > b {
 		return a
 	}

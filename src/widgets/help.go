@@ -34,17 +34,17 @@ CPU and Mem graph scaling:
   - l: scale out
 `
 
-type HelpMenu struct {
+type HelpMenuWidget struct {
 	ui.Block
 }
 
-func NewHelpMenu() *HelpMenu {
-	return &HelpMenu{
+func NewHelpMenuWidget() *HelpMenuWidget {
+	return &HelpMenuWidget{
 		Block: *ui.NewBlock(),
 	}
 }
 
-func (self *HelpMenu) Resize(termWidth, termHeight int) {
+func (self *HelpMenuWidget) Resize(termWidth, termHeight int) {
 	textWidth := 53
 	textHeight := 22
 	x := (termWidth - textWidth) / 2
@@ -53,13 +53,13 @@ func (self *HelpMenu) Resize(termWidth, termHeight int) {
 	self.Block.SetRect(x, y, textWidth+x, textHeight+y)
 }
 
-func (self *HelpMenu) Draw(buf *ui.Buffer) {
+func (self *HelpMenuWidget) Draw(buf *ui.Buffer) {
 	self.Block.Draw(buf)
 
 	for y, line := range strings.Split(KEYBINDS, "\n") {
-		for x, char := range line {
+		for x, rune := range line {
 			buf.SetCell(
-				ui.NewCell(char, ui.NewStyle(7)),
+				ui.NewCell(rune, ui.NewStyle(7)),
 				image.Pt(self.Inner.Min.X+x, self.Inner.Min.Y+y-1),
 			)
 		}

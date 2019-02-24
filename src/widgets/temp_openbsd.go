@@ -43,7 +43,7 @@ func getTemp(t *Temp, mib []C.int, mlen int, snsrdev *C.struct_sensordev, index 
 	}
 }
 
-func (self *Temp) update() {
+func (self *TempWidget) update() {
 	mib := []C.int{0, 1, 2, 3, 4}
 
 	var snsrdev C.struct_sensordev

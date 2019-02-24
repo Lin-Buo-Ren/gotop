@@ -8,25 +8,25 @@ import (
 	"strings"
 )
 
-func (self *Proc) update() {
-	processes, err := Processes()
+func (self *ProcWidget) update() {
+	processes, err := GetProcesses()
 	if err != nil {
 		log.Printf("failed to retrieve processes: %v", err)
 		return
 	}
 
-	// have to iterate like this in order to actually change the value
+	// can't iterate on the entries directly since we can't update them that way
 	for i := range processes {
-		processes[i].CPU /= self.cpuCount
+		processes[i].Cpu /= self.cpuCount
 	}
 
 	self.ungroupedProcs = processes
-	self.groupedProcs = Group(processes)
+	self.groupedProcs = GroupProcs(processes)
 
-	self.Sort()
+	self.SortProcs()
 }
 
-func Processes() ([]Process, error) {
+func GetProcesses() ([]Proc, error) {
 	output, err := exec.Command("ps", "-axo", "pid:10,comm:50,pcpu:5,pmem:5,args").Output()
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute 'ps' command: %v", err)
@@ -35,7 +35,7 @@ func Processes() ([]Process, error) {
 	// converts to []string, removing trailing newline and header
 	processStrArr := strings.Split(strings.TrimSuffix(string(output), "\n"), "\n")[1:]
 
-	processes := []Process{}
+	processes := []Proc{}
 	for _, line := range processStrArr {
 		pid, err := strconv.Atoi(strings.TrimSpace(line[0:10]))
 		if err != nil {
@@ -49,12 +49,12 @@ func Processes() ([]Process, error) {
 		if err != nil {
 			log.Printf("failed to convert Mem usage to float: %v. line: %v", err, line)
 		}
-		process := Process{
-			PID:     pid,
-			Command: strings.TrimSpace(line[11:61]),
-			CPU:     cpu,
-			Mem:     mem,
-			Args:    line[74:],
+		process := Proc{
+			Pid:         pid,
+			CommandName: strings.TrimSpace(line[11:61]),
+			FullCommand: line[74:],
+			Cpu:         cpu,
+			Mem:         mem,
 		}
 		processes = append(processes, process)
 	}

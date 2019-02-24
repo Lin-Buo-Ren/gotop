@@ -17,8 +17,8 @@ const (
 	fifty = ten + ten + ten + ten + ten
 )
 
-func (self *Proc) update() {
-	processes, err := Processes()
+func (self *ProcessesWidget) update() {
+	processes, err := GetProcesses()
 	if err != nil {
 		log.Printf("failed to retrieve processes: %v", err)
 		return
@@ -29,13 +29,13 @@ func (self *Proc) update() {
 		processes[i].CPU /= self.cpuCount
 	}
 
-	self.ungroupedProcs = processes
-	self.groupedProcs = Group(processes)
+	self.ungroupedProcesses = processes
+	self.groupedProcesses = GroupProcesses(processes)
 
-	self.Sort()
+	self.SortProcesses()
 }
 
-func Processes() ([]Process, error) {
+func GetProcesses() ([]Process, error) {
 	keywords := fmt.Sprintf("pid=%s,comm=%s,pcpu=%s,pmem=%s,args", ten, fifty, five, five)
 	output, err := exec.Command("ps", "-caxo", keywords).Output()
 	if err != nil {

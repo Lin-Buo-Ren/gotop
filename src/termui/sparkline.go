@@ -9,7 +9,7 @@ import (
 
 // Sparkline is like: ▅▆▂▂▅▇▂▂▃▆▆▆▅▃. The data points should be non-negative integers.
 type Sparkline struct {
-	Data       []int
+	Data       []int32
 	Title1     string
 	Title2     string
 	TitleColor Color

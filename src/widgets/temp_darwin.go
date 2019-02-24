@@ -53,7 +53,7 @@ func SensorsTemperatures() ([]TemperatureStat, error) {
 	return temperatures, nil
 }
 
-func (self *Temp) update() {
+func (self *TempWidget) update() {
 	sensors, err := SensorsTemperatures()
 	if err != nil {
 		log.Printf("failed to get sensors from CGO: %v", err)

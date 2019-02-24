@@ -14,19 +14,19 @@ type Table struct {
 	Header []string
 	Rows   [][]string
 
-	ColWidths  []int
-	CellXPos   []int  // column position
-	ColResizer func() // for widgets that inherit a Table and want to overload the ColResize method
-	Gap        int    // gap between columns
-	PadLeft    int
+	ColWidths  []int32
+	CellXPos   []int32 // column position
+	ColResizer func()  // for widgets that inherit a Table and want to overload the ColResize method
+	Gap        int32   // gap between columns
+	PadLeft    int32
 
 	Cursor      bool
 	CursorColor Color
 
-	UniqueCol    int    // the column used to identify the selected item
+	UniqueCol    int32  // the column used to identify the selected item
 	SelectedItem string // used to keep the cursor on the correct item if the data changes
-	SelectedRow  int
-	TopRow       int // used to indicate where in the table we are scrolled at
+	SelectedRow  int32
+	TopRow       int32 // used to indicate where in the table we are scrolled at
 }
 
 // NewTable returns a new Table instance
@@ -53,7 +53,7 @@ func (self *Table) Draw(buf *Buffer) {
 	self.ColResizer()
 
 	// finds exact column starting position
-	self.CellXPos = []int{}
+	self.CellXPos = []int32{}
 	cur := 1 + self.PadLeft
 	for _, w := range self.ColWidths {
 		self.CellXPos = append(self.CellXPos, cur)
