@@ -1,0 +1,12 @@
+version: "1"
+rules:
+  - base: master
+    upstream: cjbassi:master
+    mergeMethod: hardreset
+  - base: patch/implement-snap-packaging
+    upstream: master
+    mergeMethod: rebase
+  - base: patch/implement-snap-packaging-demonstration
+    upstream: patch/implement-snap-packaging
+    mergeMethod: merge
+label: ":arrow_heading_down: pull"
