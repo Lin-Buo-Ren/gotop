@@ -21,13 +21,13 @@ parts:
         - gcc
 
 plugs:
-    # Required by "Temperatures" widget
+    # Required by the "Temperatures" widget
     hardware-observe:
 
-    # Required by "Disk Usage" widget
+    # Required by the "Disk Usage" widget
     mount-observe:
 
-    # Required by "Processes" widget
+    # Required by the "Processes" widget
     system-observe:
 
 apps:
