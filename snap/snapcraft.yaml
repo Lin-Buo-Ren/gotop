@@ -1,10 +1,13 @@
-name: gotop-cjbassi
+name: gotop-brlin
+title: gotop (UNOFFICIAL)
 base: core18
 version: determined-by-version-script
 version-script: git describe --always --tags --dirty
 summary: A terminal based graphical activity monitor inspired by gtop and vtop
 description: |
     Another terminal based graphical activity monitor, inspired by [gtop](https://github.com/aksakalli/gtop) and [vtop](https://github.com/MrRio/vtop), this time written in [Go](https://golang.org/)!
+
+    This is NOT an official distribution of gotop, refer the snap's [issue tracker](https://github.com/Lin-Buo-Ren/gotop/issues) for support.
 
 grade: stable
 confinement: strict
@@ -31,7 +34,7 @@ plugs:
     system-observe:
 
 apps:
-    gotop-cjbassi:
+    gotop-brlin:
         command: bin/gotop
         environment:
             LANG: C.UTF-8
