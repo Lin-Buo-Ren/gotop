@@ -9,7 +9,7 @@ description: |
 grade: stable
 confinement: strict
 icon: assets/logo.png
-license: AGPL-3.0-only
+license: AGPL-3.0
 
 parts:
     gotop:
