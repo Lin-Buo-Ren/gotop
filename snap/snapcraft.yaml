@@ -8,6 +8,8 @@ description: |
 
 grade: stable
 confinement: strict
+icon: assets/logo.png
+license: AGPL-3.0-only
 
 parts:
     gotop:
