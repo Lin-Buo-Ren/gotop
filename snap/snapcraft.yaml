@@ -13,7 +13,11 @@ license: AGPL-3.0
 
 parts:
     gotop:
-        source: .
+        source: .git
+
+        # For building stable release
+        source-tag: 3.0.0
+
         plugin: go
         go-importpath: github.com/cjbassi/gotop
         build-packages:
